@@ -2,6 +2,7 @@ import cors from "cors";
 import express from "express";
 
 import requestLog from "./utils/middleware/request-log.js";
+import router from "./routes/router.js";
 
 const app = express();
 app.use(express.json());
@@ -19,6 +20,8 @@ app.get("/", requestLog, (req, res) => {
 // Health check route
 app.get("/ping", (req, res) => {
     res.status(200).json({ status: 200, message: "ok" });
-})
+});
+
+app.use("/api", requestLog, router);
 
 export default app;

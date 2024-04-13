@@ -7,11 +7,29 @@ datasource db {
   url      = env("DBURL")
 }
 
+enum UserStatus {
+  active
+  inactive
+}
+
 model UserModel {
-  aid      Int     @id @default(autoincrement())
-  email    String  @unique
-  username String?
-  fname    String?
+  id          String     @id @default(uuid())
+  seqid       String     @unique @default(dbgenerated("CONCAT('#user', LPAD(nextval('user_id_seq')::text, 6, '0'))"))
+  email       String     @unique
+  username    String     @unique
+  password    String?
+  fname       String?
+  lname       String?
+  phonenumber String?
+  ccode       String?
+  image       String?
+  bio         String?    @db.VarChar(2000)
+  info        Json?
+  status      UserStatus @default(active)
+  verified    Boolean    @default(false)
+  deleted     Boolean    @default(false)
+  createdat   DateTime   @default(now())
+  updatedat   DateTime   @updatedAt
 
   @@map("users")
 }
