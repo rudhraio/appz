@@ -16,8 +16,15 @@
   "author": "rudhraio",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.12.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2"
+  },
+  "devDependencies": {
+    "prisma": "^5.12.1"
+  },
+  "prisma": {
+    "schema": "src/utils/database/schema.prisma"
   }
 }
