@@ -13,23 +13,66 @@ enum UserStatus {
 }
 
 model UserModel {
-  id          String     @id @default(uuid())
-  seqid       String     @unique @default(dbgenerated("CONCAT('#user', LPAD(nextval('user_id_seq')::text, 6, '0'))"))
-  email       String     @unique
-  username    String     @unique
-  password    String?
-  fname       String?
-  lname       String?
-  phonenumber String?
-  ccode       String?
-  image       String?
-  bio         String?    @db.VarChar(2000)
-  info        Json?
-  status      UserStatus @default(active)
-  verified    Boolean    @default(false)
-  deleted     Boolean    @default(false)
-  createdat   DateTime   @default(now())
-  updatedat   DateTime   @updatedAt
+  id             String           @id @default(uuid())
+  seqid          String           @unique @default(dbgenerated("CONCAT('#user', LPAD(nextval('user_id_seq')::text, 6, '0'))"))
+  email          String           @unique
+  username       String           @unique
+  password       String?
+  fname          String?
+  lname          String?
+  phonenumber    String?
+  ccode          String?
+  image          String?
+  bio            String?          @db.VarChar(2000)
+  info           Json?
+  status         UserStatus       @default(active)
+  verified       Boolean          @default(false)
+  deleted        Boolean          @default(false)
+  createdat      DateTime         @default(now())
+  updatedat      DateTime         @updatedAt
+  UserSpaceModel UserSpaceModel[]
 
   @@map("users")
+}
+
+enum SpaceStatus {
+  active
+  inactive
+}
+
+model SpaceModel {
+  id             String           @id @default(uuid())
+  host           String           @unique
+  name           String?
+  desc           String?
+  image          String?
+  info           Json?
+  status         SpaceStatus      @default(active)
+  deleted        Boolean          @default(false)
+  createdat      DateTime         @default(now())
+  updatedat      DateTime         @updatedAt
+  UserSpaceModel UserSpaceModel[]
+
+  @@map("spaces")
+}
+
+enum UserSpaceRole {
+  owner
+  admin
+  member
+}
+
+model UserSpaceModel {
+  id           Int           @id @default(autoincrement())
+  user         UserModel     @relation(fields: [userid], references: [id])
+  space        SpaceModel    @relation(fields: [spaceid], references: [id])
+  role         UserSpaceRole @default(member)
+  userid  String
+  spaceid String
+  deleted      Boolean       @default(false)
+  createdat    DateTime      @default(now())
+  updatedat    DateTime      @updatedAt
+
+  @@map("userspaces")
+
 }

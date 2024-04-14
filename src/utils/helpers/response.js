@@ -2,7 +2,6 @@ import logger from "./logger.js";
 
 function successResponse(res, message = "success", data, from = "NA") {
     logger(`[response]: 200 \n[message]: ${message} \n[data]: ${JSON.stringify(data)} \n[function]: ${from} \n`);
-
     return res.status(200).json({
         status: 200,
         message: message,

@@ -10,9 +10,10 @@ class BaseModel {
         });
     }
 
-    async findOne(conditions = {}) {
-        return await this.entity.findUnique({
+    async findOne(conditions = {}, include = {}) {
+        return await this.entity.findFirst({
             where: conditions,
+            include
         });
     }
 

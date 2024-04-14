@@ -2,6 +2,12 @@ const prod = {
     production: true,
     port: process.env.PORT,
     logger: false,
+    jwt: {
+        secret: process.env.JWTSECRET,
+        exp: process.env.JWTEXP,
+        refreshsecret: process.env.JWTREFRESHSECRET,
+        refreshexp: process.env.JWTREFRESHEXP
+    },
     database: {
         type: 'postgres',
         host: process.env.DBHOST,
