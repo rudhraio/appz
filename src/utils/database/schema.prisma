@@ -63,16 +63,46 @@ enum UserSpaceRole {
 }
 
 model UserSpaceModel {
-  id           Int           @id @default(autoincrement())
-  user         UserModel     @relation(fields: [userid], references: [id])
-  space        SpaceModel    @relation(fields: [spaceid], references: [id])
-  role         UserSpaceRole @default(member)
-  userid  String
-  spaceid String
-  deleted      Boolean       @default(false)
-  createdat    DateTime      @default(now())
-  updatedat    DateTime      @updatedAt
+  id        Int           @id @default(autoincrement())
+  user      UserModel     @relation(fields: [userid], references: [id])
+  space     SpaceModel    @relation(fields: [spaceid], references: [id])
+  role      UserSpaceRole @default(member)
+  userid    String
+  spaceid   String
+  deleted   Boolean       @default(false)
+  createdat DateTime      @default(now())
+  updatedat DateTime      @updatedAt
 
   @@map("userspaces")
+}
 
+enum OtpStatus {
+  verified
+  unverified
+}
+
+enum OtpType {
+  email
+  phonenumber
+}
+
+enum UtilityType {
+  reset
+  verify
+  login
+}
+
+model OtpModel {
+  id          Int         @id @default(autoincrement())
+  type        OtpType     @default(email)
+  to          String
+  code        String
+  utility     UtilityType @default(reset)
+  count       Int         @default(1)
+  verifycount Int         @default(1)
+  status      OtpStatus   @default(unverified)
+  createdat   DateTime    @default(now())
+  updatedat   DateTime    @updatedAt
+
+  @@map("otps")
 }

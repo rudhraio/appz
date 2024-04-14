@@ -3,6 +3,7 @@ import signup from "./signup.js";
 import { body } from "express-validator";
 import validator from "../../utils/middleware/validator.js";
 import signin from "./signin.js";
+import resetPassword from "./reset-password.js";
 
 const authRouter = express.Router();
 
@@ -21,6 +22,11 @@ const signinValidData = [
 ]
 authRouter.post("/signin", validator(signinValidData), signin);
 
-
+const resetPasswordValidData = [
+    body('email').notEmpty().withMessage('Email field cannot be empty.').isEmail().withMessage('Invalid email format'),
+    body('code').optional().isString().withMessage("Invalid code sent"),
+    body('password').optional().isString().withMessage("Invalid password sent")
+]
+authRouter.post("/reset-password", validator(resetPasswordValidData), resetPassword);
 
 export default authRouter;
