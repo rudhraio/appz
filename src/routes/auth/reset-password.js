@@ -7,8 +7,8 @@ import { successResponse, serverErrorResponse, badResponse } from "../../utils/h
 
 async function resetPassword(req, res) {
     try {
-        // [TODO]: wait for 120sec
-        
+        // [TODO]: wait for 120sec & after day resend ability
+
         const { email, code, password } = req.body;
         const { accesscode } = req.query;
 
