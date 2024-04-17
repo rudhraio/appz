@@ -1,7 +1,11 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 const prod = {
     production: true,
     port: process.env.PORT,
     logger: false,
+
     jwt: {
         secret: process.env.JWTSECRET,
         exp: process.env.JWTEXP,
@@ -16,6 +20,13 @@ const prod = {
         password: process.env.DBPASSWORD,
         name: process.env.DBNAME,
         schema: process.env.DBSCHEMA
+    },
+    email: {
+        host: process.env.EMAILHOST,
+        token: process.env.EMAILTOKEN
+    },
+    urls: {
+        fehost: "https://appzfe.pages.dev"
     }
 }
 

@@ -21,7 +21,6 @@ async function signin(req, res) {
             return badResponse(res, "invalid signin credentails");
         }
 
-        console.log("user", user.id);
         const userspace = await userSpaceModel.findOne({
             user: { id: user.id },
             role: "owner"
