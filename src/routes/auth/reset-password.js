@@ -15,11 +15,21 @@ async function resetPassword(req, res) {
 
         const otpModel = new OtpModel();
         const userModel = new UserModel();
+        let existingOtp;
+        if (accesscode && code) {
+            existingOtp = await otpModel.findOne({ to: email, status: "unverified", utility: "reset", code: code });
+        } else {
+            existingOtp = await otpModel.findOne({ to: email, status: "unverified", utility: "reset" });
 
-        const existingOtp = await otpModel.findOne({ to: email, status: "unverified", utility: "reset" });
+        }
+
         const user = await userModel.findOne({ email: email });
         let otpcode = existingOtp?.code;
-        if (accesscode && existingOtp) {
+        if (accesscode) {
+            if (!existingOtp) {
+                return badResponse(res, "invalid otp");
+            }
+            
             if (!(code && password)) {
                 return badResponse(res, "code & password are required fields");
             }
