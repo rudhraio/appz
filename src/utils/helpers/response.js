@@ -9,6 +9,7 @@ function successResponse(res, message = "success", data, from = "NA") {
     })
 }
 
+
 function createdResponse(res, message = "created successfull", data, from = "NA") {
     logger(`[response]: 201 \n[message]: ${message} \n[data]: ${JSON.stringify(data)} \n[function]: ${from} \n`);
 
@@ -24,6 +25,16 @@ function badResponse(res, message = "bad request", data, from = "NA") {
 
     return res.status(400).json({
         status: 400,
+        message: message,
+        data: data
+    })
+}
+
+function unauthorizedResponse(res, message = "Unauthorized", data, from = "NA") {
+    logger(`[response]: 403 \n[message]: ${message} \n[data]: ${JSON.stringify(data)} \n[function]: ${from} \n`);
+
+    return res.status(403).json({
+        status: 403,
         message: message,
         data: data
     })
@@ -49,4 +60,4 @@ function serverErrorResponse(res, message = "unable to process request", data, f
     })
 }
 
-export { successResponse, createdResponse, badResponse, notFoundResponse, serverErrorResponse };
+export { successResponse, createdResponse, badResponse, notFoundResponse, serverErrorResponse, unauthorizedResponse };

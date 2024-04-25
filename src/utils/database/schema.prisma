@@ -21,7 +21,7 @@ model UserModel {
   fname          String?
   lname          String?
   phonenumber    String?
-  ccode          String?
+  ccode          Int?
   image          String?
   bio            String?          @db.VarChar(2000)
   info           Json?

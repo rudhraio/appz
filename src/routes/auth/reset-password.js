@@ -33,7 +33,7 @@ async function resetPassword(req, res) {
 
             existingOtp.verifycount += 1;
             if (existingOtp.verifycount > 5) {
-                return badResponse(res, "verification rate exceeded");
+                return badResponse(res, "Verification rate exceeded");
             }
 
             if (existingOtp?.code !== code) {
@@ -57,7 +57,7 @@ async function resetPassword(req, res) {
 
 
 
-            return badResponse(res, "something went wrong. please contact support");
+            return badResponse(res, "Something went wrong. please contact support");
         }
 
         // forgot password code
@@ -71,7 +71,7 @@ async function resetPassword(req, res) {
                 count: existingOtp.count
             });
             sendResetLink(otpcode, email);
-            return successResponse(res, `Code has been resent to email ${email} if exists.`);
+            return successResponse(res, `Reset link has been resent to email ${email} if exists.`);
         }
 
         otpcode = generateRandomCode()
@@ -84,7 +84,7 @@ async function resetPassword(req, res) {
             sendResetLink(otpcode, email);
         }
 
-        return successResponse(res, `Code has been sent to email ${email} if exists.`)
+        return successResponse(res, `Reset link has been sent to email ${email} if exists.`)
     } catch (error) {
         logger("[ERR]: ", error);
         return serverErrorResponse(res);

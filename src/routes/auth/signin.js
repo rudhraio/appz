@@ -55,6 +55,10 @@ async function signin(req, res) {
             roleaccess: roleaccess
         }
 
+        res.cookie('access', access, { httpOnly: true, maxAge: 432000000 });
+        res.cookie('role', roleaccess, { httpOnly: true, maxAge: 432000000 });
+        res.cookie('refresh', refresh, { httpOnly: true, maxAge: 2592000000 });
+
         return successResponse(res, "user login successfull", responsePayload)
     } catch (error) {
         logger("[ERR]: ", error);

@@ -3,6 +3,7 @@ import UserModel from "../../utils/database/models/user.model.js";
 import { badResponse, createdResponse } from "../../utils/helpers/response.js";
 import SpaceModel from "../../utils/database/models/space.model.js";
 import UserSpaceModel from "../../utils/database/models/user-space.model.js";
+import { generateNewLink, sendVerifyLink } from "./user-verify.js";
 
 async function signup(req, res) {
     try {
@@ -70,6 +71,18 @@ async function signup(req, res) {
             refresh: refresh,
             roleaccess: roleaccess
         }
+
+        try {
+            const code = await generateNewLink(email);
+            sendVerifyLink(code, email);
+        } catch (error) {
+            logger("[ERR]: failed signup verify", error);
+        }
+
+
+        res.cookie('access', access, { httpOnly: true, maxAge: 432000000 });
+        res.cookie('role', roleaccess, { httpOnly: true, maxAge: 432000000 });
+        res.cookie('refresh', refresh, { httpOnly: true, maxAge: 2592000000 });
 
 
         return createdResponse(res, "user created successfull", responsePayload);
