@@ -15,36 +15,36 @@ async function resetPassword(req, res) {
 
         const otpModel = new OtpModel();
         const userModel = new UserModel();
-        let existingOtp;
-        if (accesscode && code) {
-            existingOtp = await otpModel.findOne({ to: email, status: "unverified", utility: "reset", code: code });
-        } else {
-            existingOtp = await otpModel.findOne({ to: email, status: "unverified", utility: "reset" });
 
-        }
 
-        const user = await userModel.findOne({ email: email });
+        let existingOtp = await otpModel.findOne({ to: email, status: "unverified", utility: "reset" });
         let otpcode = existingOtp?.code;
+
+        // reset password code
         if (accesscode) {
+
             if (!existingOtp) {
-                return badResponse(res, "invalid otp");
+                return badResponse(res, "Invalid request.");
             }
-            
+
             if (!(code && password)) {
-                return badResponse(res, "code & password are required fields");
+                return badResponse(res, "Missing fileds, code or password.");
             }
+
             existingOtp.verifycount += 1;
             if (existingOtp.verifycount > 5) {
                 return badResponse(res, "verification rate exceeded");
             }
 
-            if (existingOtp.code !== code) {
+            if (existingOtp?.code !== code) {
                 await otpModel.update(existingOtp.id, {
                     verifycount: existingOtp.verifycount
                 });
+                return badResponse(res, "Invalid request.");
+            }
 
-                return badResponse(res, "invalid otp");
-            } else if (existingOtp.code === code && user?.id) {
+            const user = await userModel.findOne({ email: email });
+            if (existingOtp.code === code && user?.id) {
                 const newhashpassword = await userModel.hashPassword(password);
                 await userModel.update(user.id, {
                     password: newhashpassword
@@ -52,45 +52,39 @@ async function resetPassword(req, res) {
                 await otpModel.update(existingOtp.id, {
                     status: "verified"
                 });
-            } else {
-                return badResponse(res, "something went wrong. please contact support");
+                return successResponse(res, "User password updated. Please signin")
             }
-            sendResetLink(otpcode, email);
-            return successResponse(res, "user password updated. Please signin")
-        } else if (existingOtp) {
+
+
+
+            return badResponse(res, "something went wrong. please contact support");
+        }
+
+        // forgot password code
+        if (existingOtp) {
             if (existingOtp.count >= 5) {
-                return badResponse(res, "otp rate exceeded");
+                return badResponse(res, "OTP rate exceeded");
             }
+
             existingOtp.count += 1;
             await otpModel.update(existingOtp.id, {
                 count: existingOtp.count
             });
             sendResetLink(otpcode, email);
-            return successResponse(res, `otp has been sent, if registered email exists : ${email}`)
+            return successResponse(res, `Code has been resent to email ${email} if exists.`);
         }
 
-
-        if (!accesscode) {
-            otpcode = generateRandomCode()
-            await otpModel.create({
-                to: email,
-                code: otpcode
-            });
-
-
-            if (!user) {
-                return successResponse(res, `otp has been sent, if registered email exists ${email}`)
-            } else {
-                sendResetLink(otpcode, email);
-            }
-
-            return successResponse(res, `otp has been sent, if registered email exists: ${email}`)
-        } else {
-            return badResponse(res, "something went wrong. please contact support");
+        otpcode = generateRandomCode()
+        await otpModel.create({
+            to: email,
+            code: otpcode
+        });
+        const user = await userModel.findOne({ email: email });
+        if (user) {
+            sendResetLink(otpcode, email);
         }
 
-
-
+        return successResponse(res, `Code has been sent to email ${email} if exists.`)
     } catch (error) {
         logger("[ERR]: ", error);
         return serverErrorResponse(res);
@@ -142,7 +136,4 @@ function sendResetLink(code, email) {
             }
             return response.json();
         })
-
-
-
 }
