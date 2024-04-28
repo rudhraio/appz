@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(cors({
-    origin: '*',
+    origin: ['http://localhost:5173', 'https://appzfe.pages.dev/'],
     credentials: true,
 }));
 
