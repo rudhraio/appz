@@ -1,6 +1,6 @@
-import UserModel from "../../utils/database/models/user.model.js";
-import logger from "../../utils/helpers/logger.js";
-import { serverErrorResponse, successResponse } from "../../utils/helpers/response.js";
+import UserModel from "../../../utils/database/models/user.model.js";
+import logger from "../../../utils/helpers/logger.js";
+import { serverErrorResponse, successResponse } from "../../../utils/helpers/response.js";
 
 async function profilePut(req, res) {
     try {

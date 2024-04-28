@@ -2,8 +2,8 @@ import express from "express";
 import profileGet from "./profile.get.js";
 import profilePut from "./profile.put.js";
 import { body } from "express-validator";
-import validator from "../../utils/middleware/validator.js";
-import { PHONEREGEX } from "../../utils/helpers/regex.js";
+import validator from "../../../utils/middleware/validator.js";
+import { PHONEREGEX } from "../../../utils/helpers/regex.js";
 
 const profileRouter = express.Router();
 
